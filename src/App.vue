@@ -1,30 +1,68 @@
+<script setup>
+import { ref, computed } from 'vue'
+
+// Reactive state to store tasks and input value
+const newTask = ref('')
+const tasks = ref([])
+
+// Reactive state for the filter option
+const filter = ref('all') // Options: 'all', 'completed', 'incomplete'
+
+// Function to add a new task
+const addTask = () => {
+  if (newTask.value.trim() !== '') {
+    tasks.value.push({ text: newTask.value, completed: false })
+    newTask.value = '' // Clear input field
+  }
+}
+
+// Function to remove a task
+const removeTask = (index) => {
+  tasks.value.splice(index, 1)
+}
+
+// Function to toggle task completion
+const toggleTask = (task) => {
+  task.completed = !task.completed
+}
+
+// Computed property for filtered tasks
+const filteredTasks = computed(() => {
+  if (filter.value === 'completed') {
+    return tasks.value.filter(task => task.completed)
+  } else if (filter.value === 'incomplete') {
+    return tasks.value.filter(task => !task.completed)
+  }
+  return tasks.value // 'all'
+})
+</script>
+
 <template>
-  <input v-model="todo" type="text">
-  <button @click="add">add</button>
-  <div v-for="task in todos">
-    <div>
-      {{ task.title }}
+  <div class="container">
+    <h1>Vue 3 To-Do List</h1>
+    
+    <div class="input-section">
+      <input v-model="newTask" placeholder="Enter a new task..." @keyup.enter="addTask" />
+      <button @click="addTask">Add Task</button>
     </div>
+
+    <div class="filter-section">
+      <button @click="filter = 'all'" :class="{ active: filter === 'all' }">All</button>
+      <button @click="filter = 'completed'" :class="{ active: filter === 'completed' }">Completed</button>
+      <button @click="filter = 'incomplete'" :class="{ active: filter === 'incomplete' }">Incomplete</button>
+    </div>
+
+    <ul class="task-list">
+      <li v-for="(task, index) in filteredTasks" :key="index" :class="{ completed: task.completed }">
+        <span>{{ task.text }}</span>
+        <div class="actions">
+          <button class="done" @click="toggleTask(task)">Done</button>
+          <button class="remove" @click="removeTask(index)">delete</button>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
-
-<script setup>
-import {ref} from 'vue'
-let todos=ref([''])
-let todo=ref('')
-function add() {
-  todos.value.push({
-    complate:false, title:todo.value
-  })
-  todo.value=''
-}
-function taskedComplated(task){
-  task.complate=!task.complate
-}
-function deleteTask(index){
-  todos.value.splice(index,1)
-}
-</script>
 
 <style scoped>
 .container {
