@@ -18,6 +18,12 @@ function add() {
   })
   todo.value=''
 }
+function taskedComplated(task){
+  task.complate=!task.complate
+}
+function deleteTask(index){
+  todos.value.splice(index,1)
+}
 </script>
 
 <style scoped>
