@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-
+import add from '@/components/add.vue'
 // Reactive state to store tasks and input value
 const newTask = ref('')
 const tasks = ref([])
@@ -41,11 +41,8 @@ const filteredTasks = computed(() => {
   <div class="container">
     <h1>Vue 3 To-Do List</h1>
     
-    <div class="input-section">
-      <input v-model="newTask" placeholder="Enter a new task..." @keyup.enter="addTask" />
-      <button @click="addTask">Add Task</button>
-    </div>
-
+    <add/>
+    
     <div class="filter-section">
       <button @click="filter = 'all'" :class="{ active: filter === 'all' }">All</button>
       <button @click="filter = 'completed'" :class="{ active: filter === 'completed' }">Completed</button>
@@ -74,11 +71,6 @@ const filteredTasks = computed(() => {
 .actions {
   display: flex;
   gap: 10px;
-}
-.input-section {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
 }
 .done {
   background: #42b883;
